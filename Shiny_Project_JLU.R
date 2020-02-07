@@ -10,10 +10,10 @@ library(lubridate)
 ###############################################################
 
 # Help functions
-source("C:\\MAIN\\NYCDSA\\R Shiny Project\\Shiny_Project_Functions.R")
+source("C:\\MAIN\\NYCDSA\\R_Shiny_Project\\Shiny_Project_Functions.R")
 
 # Read in the file and look at some descriptive statistics
-file_name = "C:\\MAIN\\NYCDSA\\R Shiny Project\\Data_All_Assets_Compiled.xlsx"
+file_name = "C:\\MAIN\\NYCDSA\\R_Shiny_Project\\Data_All_Assets_Compiled.xlsx"
 returns_1999_2020 = read_excel(file_name, sheet = "Raw_Returns")
 
 ###############################################################
@@ -67,12 +67,61 @@ plot_returns_histogram(df$Bonds_Tsy_30y, "30y Treasuries")
 plot_returns_histogram(df$Gold, "Gold")
 
 ###############################################################
+# SCATTERPLOTS TO SHOW POWER OF DIVERSIFICATION
+###############################################################
+
+# U.S Stocks vs. EM Stocks
+plot_scatter_of_returns(df$Stocks_US, df$Stocks_EM,
+                        "U.S. Stocks", "EM Stocks")
+
+# U.S. Stocks vs. REITs
+plot_scatter_of_returns(df$Stocks_US, df$REITs,
+                        "U.S. Stocks", "REITs")
+
+# U.S. Stocks vs. Treasuries
+plot_scatter_of_returns(df$Stocks_US, df$Bonds_Tsy_30y,
+                        "U.S. Stocks", "30y Treasuries")
+
+# U.S. Stocks vs. Gold
+plot_scatter_of_returns(df$Stocks_US, df$Gold,
+                        "U.S. Stocks", "Gold")
+
+###############################################################
+# CORRELATION HEATMAP
+###############################################################
+
+df2 = df %>% select(Stocks_US,
+                    Stocks_Developed,
+                    Stocks_EM,
+                    REITs,
+                    Stocks_Energy,
+                    Gold,
+                    Bonds_Tsy_30y)
+
+plot_correlation_heatmap(df2)
+
+###############################################################
+# OVERLAPPING DENSITY PLOTS
+###############################################################
+
+# This shows that returns distribution for stocks are fatter tailed
+# while returns distribution for Treasuries is narrower
+# In this sense, Treasuries act as a stabilizer for a stock
+# portfolio # both because they have low vol and also
+# because they have an inverse correlation
+df3 = df %>% select(Stocks_US,
+                    Gold,
+                    Bonds_Tsy_30y)
+
+plot_overlapping_density(df3)
+
+###############################################################
 # SELECT ASSETS AND DRAW EFFICIENT MARKET FRONTIER
 ###############################################################
 
 # Select a subset of assets and plot the efficient market frontier
-df2 = df %>% select(Date, Stocks_US, Bonds_Tsy_30y)
-generate_EMF(df2, 10000)
+df4 = df %>% select(Date, Stocks_US, Bonds_Tsy_30y)
+plot_efficient_market_frontier(df4, n_points = 10000)
 
 ###############################################################
 # SOLVING FOR MIN VAR PORTFOLIO
@@ -85,7 +134,7 @@ min_var_weights = calculate_min_var_portfolio(df,
                   plot_bar_chart = TRUE)
 
 # Calculate daily returns of min_var portfolio
-min_var_returns = generate_portfolio_returns(min_var_weights, df)
+min_var_returns = calculate_portfolio_returns(min_var_weights, df)
 
 # Calculate cumulative return of min_var portfolio
 calculate_cumulative_return(min_var_returns$portfolio_returns)
@@ -119,7 +168,7 @@ custom_weights = c(US_stock_weight/100,
                    Gold_weight/100,
                    Energy_stocks/100)
 
-custom_returns = generate_portfolio_returns(custom_weights, df)
+custom_returns = calculate_portfolio_returns(custom_weights, df)
 
 calculate_cumulative_return(custom_returns$portfolio_returns)
 

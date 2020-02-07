@@ -7,8 +7,8 @@ library(dplyr)
 library(ggplot2)
 library(quadprog)
 library(testit)
-
-
+library(corrplot)
+library(tidyr)
 
 # Input: a vector of daily returns
 #   Example: c(2, -1, 3) represents 2% return on day 1,
@@ -18,6 +18,14 @@ library(testit)
 calculate_cumulative_return = function(returns_vector)
 {
   return(100*(prod(1 + returns_vector / 100) - 1))
+}
+
+
+# Plot a correlation heatmap
+plot_correlation_heatmap = function(returns_matrix)
+{
+  g = corrplot(cor(returns_matrix), method = "square")
+  print(g)
 }
 
 
@@ -31,13 +39,34 @@ plot_returns_histogram = function(return_series, asset_name)
 }
 
 
+# Plot overlapping density graphs
+plot_overlapping_density = function(returns_matrix)
+{
+  n_cols = ncol(returns_matrix)
+  name_first = names(returns_matrix)[1]
+  name_last = names(returns_matrix)[n_cols]
+  
+  # Convert from: columns = asset 1, asset 2, asset 3, etc
+  # with a rectangular matrix of returns for assets 1, 2, 3
+  # To: lining the columns of all assets in one long column
+  # named "return", and having a 2nd column listing if it is
+  # asset 1, asset 2, etc.
+  returns_matrix_long = returns_matrix %>%
+    gather(asset, returns, name_first: name_last)
+  
+  g = ggplot(returns_matrix_long,
+             aes(returns, stat(density), color = asset)) +
+      geom_freqpoly(bins = 30) + xlim(-3, 3)
+  print(g)
+}
+
 
 # Input: (m by 1) matrix of asset weights.  There are m assets
 #   and (n by m+1) matrix of returns matrix. Left column is dates
 #   There are n observations (n days or n months, etc)
 # Output: (n by 2) matrix of portfolio returns
 #   Again, the left column contains dates
-generate_portfolio_returns = function(asset_weights, returns_matrix)
+calculate_portfolio_returns = function(asset_weights, returns_matrix)
 {
   # Extract necessary parameters
   n_rows = nrow(returns_matrix)
@@ -133,12 +162,10 @@ plot_portfolio_growth_over_time = function(date_series, return_series, asset_nam
 }
 
 
-##########################################
-# Generate efficient market frontier
 
 # Input: m+1 columns of asset returns (from m assets)
 # Output: plot the efficient market frontier
-generate_EMF = function(asset_returns, n_points)
+plot_efficient_market_frontier = function(asset_returns, n_points)
 {
   # Extract necessary parameters
   n_assets = ncol(asset_returns) - 1
@@ -192,7 +219,8 @@ generate_EMF = function(asset_returns, n_points)
   print(g)
 }
 
-
+# Print key metrics of cumulative return, annualized return,
+#   annualized volatility, etc.
 print_key_metrics = function(asset_name, asset_returns, start_date, end_date)
 {
   n_obs = nrow(df)
@@ -205,6 +233,22 @@ print_key_metrics = function(asset_name, asset_returns, start_date, end_date)
                 "Total return:",round(cumulative_return,1),"%\n",
                 "Annualized return:",round(annualized_return,1),"%\n",
                 "Annualized vol:",round(annualized_vol,1),"%\n")
+}
+
+
+# Plot a scatterplot of returns between assets 1 and 2
+plot_scatter_of_returns = function(asset1_returns, asset2_returns,
+                                   asset1_name, asset2_name)
+{
+  g = ggplot(data = data.frame(asset1_returns, asset2_returns),
+             aes(x = asset1_returns, y = asset2_returns)) +
+      geom_point(color = "darkblue", size = 1) +
+      ggtitle(paste("Scatterplot of Returns between",
+                    asset1_name, "and", asset2_name)) + 
+      xlab(paste("Returns of", asset1_name)) +
+      ylab(paste("Returns of", asset2_name)) +
+      geom_smooth(color = "red", method=lm, se=FALSE)
+  print(g)
 }
 
 
