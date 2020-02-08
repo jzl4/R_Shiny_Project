@@ -40,10 +40,10 @@ plot_correlation_heatmap = function(returns_matrix)
 
 
 # Given time series of returns, generate histogram showing distribution
-plot_returns_histogram = function(return_series, asset_name)
+plot_returns_histogram = function(return_series, asset_name, outline_color, fill_color)
 {
   g = ggplot(data = data.frame(return_series), aes(x = return_series)) +
-    geom_histogram(binwidth = 0.1, color = "slateblue4", fill = "slateblue2") +
+    geom_histogram(binwidth = 0.1, color = outline_color, fill = fill_color) +
     labs(title = paste("Returns Distribution for", asset_name), x = "Daily Return (%)", y = "Count")
   print(g)
 }
@@ -147,7 +147,7 @@ calculate_min_var_portfolio = function(returns_matrix,
 
 # Input: a series of dates (increasing) and series of corresponding returns
 # Output: a graph of how $100 grows over this time period
-plot_portfolio_growth_over_time = function(date_series, return_series, asset_name)
+plot_portfolio_growth_over_time = function(date_series, return_series, asset_name, color)
 {
   # Verify that the length of the dates vector matches with return vector
   assert(length(date_series) == length(return_series))
@@ -165,7 +165,7 @@ plot_portfolio_growth_over_time = function(date_series, return_series, asset_nam
   
   price_plot = ggplot(data = data.frame(date_series, price_series),
                       aes(x = date_series, y = price_series)) +
-    geom_line(color = "springgreen4", size = 1) +
+    geom_line(color = color, size = 1) +
     ggtitle(paste("If you had invested $100 in", asset_name, "...")) +
     xlab("Time") + ylab("Portfolio value")
   print(price_plot)
