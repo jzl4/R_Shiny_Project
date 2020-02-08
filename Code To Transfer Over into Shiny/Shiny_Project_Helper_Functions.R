@@ -189,7 +189,7 @@ plot_efficient_market_frontier = function(asset_returns, n_points)
     # print(asset_returns)
     
     # Generate the portfolio return vector using these weights
-    random_portfolio_returns = generate_portfolio_returns(
+    random_portfolio_returns = calculate_portfolio_returns(
                                asset_weights,
                                asset_returns)
     # print(random_portfolio_returns)

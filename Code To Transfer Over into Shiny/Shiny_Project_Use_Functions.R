@@ -43,14 +43,13 @@ row_with_worst_loss_stocks_US
 # TOTAL RETURN, PORTFOLIO GROWTH, HISTOGRAM
 ###############################################################
 
-start_date = ymd("2000-08-01")
+start_date = ymd("2010-08-01")
 end_date = ymd("2020-01-01")
 
 df = returns_1999_2020 %>% filter(Date >= start_date &
                                   Date <= end_date)
 
 # Calculate the cumulative return of various assets
-
 print_key_metrics("U.S. Stocks", df$Stocks_US, start_date, end_date)
 print_key_metrics("E.M. Stocks", df$Stocks_EM, start_date, end_date)
 print_key_metrics("30y Treasuries", df$Bonds_Tsy_30y, start_date, end_date)
@@ -65,6 +64,19 @@ plot_portfolio_growth_over_time(df$Date, df$Gold, "Gold")
 plot_returns_histogram(df$Stocks_US, "U.S. Stocks")
 plot_returns_histogram(df$Bonds_Tsy_30y, "30y Treasuries")
 plot_returns_histogram(df$Gold, "Gold")
+
+###############################################################
+# OVERLAPPING DENSITY PLOTS
+###############################################################
+
+# This shows that returns distribution for stocks are fatter tailed
+# while returns distribution for Treasuries is narrower
+df2 = df %>% select(Stocks_US,
+                    Gold,
+                    Bonds_Tsy_30y)
+
+plot_overlapping_density(df2)
+
 
 ###############################################################
 # SCATTERPLOTS TO SHOW POWER OF DIVERSIFICATION
@@ -90,7 +102,7 @@ plot_scatter_of_returns(df$Stocks_US, df$Gold,
 # CORRELATION HEATMAP
 ###############################################################
 
-df2 = df %>% select(Stocks_US,
+df3 = df %>% select(Stocks_US,
                     Stocks_Developed,
                     Stocks_EM,
                     REITs,
@@ -98,30 +110,22 @@ df2 = df %>% select(Stocks_US,
                     Gold,
                     Bonds_Tsy_30y)
 
-plot_correlation_heatmap(df2)
-
-###############################################################
-# OVERLAPPING DENSITY PLOTS
-###############################################################
-
-# This shows that returns distribution for stocks are fatter tailed
-# while returns distribution for Treasuries is narrower
-# In this sense, Treasuries act as a stabilizer for a stock
-# portfolio # both because they have low vol and also
-# because they have an inverse correlation
-df3 = df %>% select(Stocks_US,
-                    Gold,
-                    Bonds_Tsy_30y)
-
-plot_overlapping_density(df3)
+plot_correlation_heatmap(df3)
 
 ###############################################################
 # SELECT ASSETS AND DRAW EFFICIENT MARKET FRONTIER
 ###############################################################
 
+# In this sense, Treasuries act as a stabilizer for a stock
+# portfolio # both because they have low vol and also
+# because they have an inverse correlation
+
 # Select a subset of assets and plot the efficient market frontier
 df4 = df %>% select(Date, Stocks_US, Bonds_Tsy_30y)
 plot_efficient_market_frontier(df4, n_points = 10000)
+
+df5 = df %>% select(Date, Stocks_US, Bonds_Tsy_30y, Gold)
+plot_efficient_market_frontier(df5, n_points = 10000)
 
 ###############################################################
 # SOLVING FOR MIN VAR PORTFOLIO
