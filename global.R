@@ -2,6 +2,8 @@
 # R Shiny Project
 # Joe Lu, Joe.Zhou.Lu@gmail.com
 
+# Help file with all of the functions required to run app.R
+
 # Import required libraries
 library(shiny)
 library(dplyr)
