@@ -10,7 +10,7 @@ library(lubridate)
 ###############################################################
 
 # Help functions
-source("C:\\MAIN\\NYCDSA\\R_Shiny_Project\\Shiny_Project_Functions.R")
+source("C:\\MAIN\\NYCDSA\\R_Shiny_Project\\global.R")
 
 # Read in the file and look at some descriptive statistics
 file_name = "C:\\MAIN\\NYCDSA\\R_Shiny_Project\\Data_All_Assets_Compiled.xlsx"
@@ -39,11 +39,13 @@ row_with_worst_loss_stocks_US
 # Read more about the atmosphere at that time here:
 #   https://money.cnn.com/2008/10/15/markets/markets_newyork/
 
+
+
 ###############################################################
 # TOTAL RETURN, PORTFOLIO GROWTH, HISTOGRAM
 ###############################################################
 
-start_date = ymd("2010-08-01")
+start_date = ymd("2001-08-01")
 end_date = ymd("2020-01-01")
 
 df = returns_1999_2020 %>% filter(Date >= start_date &
@@ -134,8 +136,9 @@ plot_efficient_market_frontier(df5, n_points = 10000)
 # Calculate the portfolio weights with the min variance
 #   over this period of time
 min_var_weights = calculate_min_var_portfolio(df,
-                  print_description = TRUE,
-                  plot_bar_chart = TRUE)
+                  print_description = TRUE)
+
+plot_min_var_bar(df, min_var_weights)
 
 # Calculate daily returns of min_var portfolio
 min_var_returns = calculate_portfolio_returns(min_var_weights, df)

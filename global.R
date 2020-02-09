@@ -98,8 +98,7 @@ calculate_portfolio_returns = function(asset_weights, returns_matrix)
 # Output: min-variance portfolio for that time period of asset returns
 # Calculate the covariance matrix for the entire 20 years
 calculate_min_var_portfolio = function(returns_matrix,
-                                       print_description,
-                                       plot_bar_chart)
+                                       print_description)
 {
   # Extract necessary parameters
   n_rows = nrow(returns_matrix)
@@ -124,21 +123,24 @@ calculate_min_var_portfolio = function(returns_matrix,
     print(paste0("Using returns data between ",date_1," and ",date_2,", the portfolio with the minimum variance is:"))
     print(paste0(asset_names, ": ", round(100*solQP$solution,0), '%'))
   }
-  
-  # Optionally, make a bar plot
-  if (plot_bar_chart)
-  {
-    bar_chart = ggplot(data = data.frame(asset_names, solQP$solution),
-                       aes(x = asset_names, y = 100*solQP$solution)) +
-      geom_bar(stat="identity", fill="seagreen4") +
-      ggtitle("Min Variance Portfolio Weights") +
-      xlab("Asset Class") + ylab("% Allocation") +
-      coord_flip()
-    
-    print(bar_chart)
-  }
-  
+
   return(solQP$solution)
+}
+
+
+plot_min_var_bar  = function(returns_matrix, solution)
+{
+  n_cols = ncol(returns_matrix)
+  asset_names = colnames(returns_matrix)[2:n_cols]
+  
+  bar_chart = ggplot(data = data.frame(asset_names, solution),
+                     aes(x = asset_names, y = 100*solution)) +
+    geom_bar(stat="identity", fill="purple4") +
+    ggtitle("Min Variance Portfolio Weights") +
+    xlab("Asset Class") + ylab("% Allocation") +
+    coord_flip()
+  
+  print(bar_chart)
 }
 # Solution for 20y is: 22% US stocks, 9% developed markets, 0% EM
 #   -3% REITs, 56% 30y Treasuries, 16% gold, 0% energy stocks
@@ -233,16 +235,18 @@ plot_efficient_market_frontier = function(asset_returns, n_points)
 #   annualized volatility, etc.
 print_key_metrics = function(asset_name, asset_returns, start_date, end_date)
 {
-  n_obs = nrow(df)
+  n_obs = NROW(asset_returns)
   n_years = n_obs / 252
-  
+
   cumulative_return = calculate_cumulative_return(asset_returns)
   annualized_return = 100*((1 + cumulative_return/100)^(1/n_years) - 1)
   annualized_vol = sd(asset_returns)*(252^0.5)
-  cat("For",asset_name,"between",as.character(start_date),"and",as.character(end_date),":\n",
-      "Total return:",round(cumulative_return,1),"%\n",
-      "Annualized return:",round(annualized_return,1),"%\n",
-      "Annualized vol:",round(annualized_vol,1),"%\n")
+  result = paste("For ",asset_name," between ",as.character(start_date)," and ",as.character(end_date),":",
+    "Total return: ",round(cumulative_return,1),"%,",
+    "Annualized return: ",round(annualized_return,1),"%, ",
+    "Annualized vol: ",round(annualized_vol,1),"%")
+
+  return(result)
 }
 
 
