@@ -35,28 +35,28 @@ body = dashboardBody(
             h2("Introduction"),
             h4("Asset allocation is one of the most important decisions to make during your investing process."),
             img(src = "https://www.thebalance.com/thmb/TWxpp7hM7I_7qrG-FXzgYXiDMww=/2121x1414/filters:fill(auto,1)/GettyImages-469078560-5b59fa7c46e0fb0024edc32d.jpg",
-                width = "60%"),
+                width = "40%"),
             
             h4("Some financial assets perform well during periods of rapid economic activity (for example, stocks and real estate)."),
             img(src = "https://si.wsj.net/public/resources/images/BN-WM443_3jX5Q_M_20171207112419.jpg",
-                width = "60%"),
+                width = "40%"),
             
             h4("Others perform well during periods of slowing economic growth (government bonds of powerful countries)."),
             img(src = "https://images.bostonprivate.com/FI-101-1304.jpg",
-                width = "60%"),
+                width = "40%"),
             h4("Yet others outperform during periods of high inflation (precious metals, TIPS)."),
             img(src = "https://g.foolcdn.com/editorial/images/448239/silver-and-gold-gettyimages-523214485.jpg",
-                width = "60%"),
+                width = "40%"),
             
             h4("While others do well during low inflation (cash, government bonds)."),
             img(src = "https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/11/20/17/istock-502911292.jpg",
-                width = "60%"),
+                width = "40%"),
             
-            h4("It is VERY difficult to predict which economic conditions come next (even for economists and Wall Street professionals).
+            h4("It is very difficult to predict which economic conditions come next.
                Thus, the best solution is to hold a well-diversified mixture of different types of assets,
                to protect your portfolio from crippling losses, no matter which way economic conditions develop."),
             img(src = "https://cdn.boulevards.com/files/2014/07/300Storm-Surfers1.jpg",
-                width = "60%")
+                width = "40%")
         ),
         
         tabItem(tabName = "choosing_dates_tab",
