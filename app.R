@@ -173,7 +173,12 @@ body = dashboardBody(
         
         tabItem(tabName = "custom_portfolio",
             h2("Design Your Own Portfolio"),
-            h4("Enter Weights Adding Up to 100% and observe how it would have performed"),
+            h4("Long story short: Allocating some portion of your  portfolio out of stocks and into
+                long-duration Treasuries and gold can reduce your portfolio risk,
+                while sacrificing returns.  Ultimately, you need to choose a portfolio that suits
+                your return targets, risk tolerance, and investment horizon.
+                On this page you can enter weights adding up to 100% and observe how it would have performed.
+                (Disclaimer: past performance does not predict future returns.)"),
             numericInput(inputId = "US_stock_weight", "U.S. Stocks (%)", value = 30,
                          min = 0, max = 100, step = 5),
             numericInput(inputId = "Dev_stock_weight", "Developed stocks (%)", value = 10,
@@ -194,10 +199,10 @@ body = dashboardBody(
         ),
         
         tabItem(tabName = "about_author",
-            h2("About The Author"),
+            h2("About The Author: Joe Lu"),
             h4("Background"),
             tags$div(tags$ul(
-                tags$li(tags$span("NYC Data Science Academy (Rigorous Data Science Coursework & Projects)")),
+                tags$li(tags$span("NYC Data Science Academy")),
                 tags$li(tags$span("Seven Years of Front Office Financial Industry Experience")),
                 tags$li(tags$span("M.S. Computational Finance, Carnegie Mellon")),
                 tags$li(tags$span("B.A. Mathematics & Economics, Cornell University"))            
@@ -212,7 +217,8 @@ body = dashboardBody(
             tags$div(tags$ul(
                 tags$li(tags$span("R: Shiny Dashboard, dplyr, tidyr, ggplot2, quadprog, corrplot")),
                 tags$li(tags$span("Data from: yahoo finance")),
-                tags$li(tags$span("References: Modern Portfolio Theory / Capital Asset Pricing Model, Risk-Parity / All-Weather Portfolios"))
+                tags$li(tags$span("References: Modern Portfolio Theory / Capital Asset Pricing Model,
+                                  Risk-Parity / All-Weather Portfolio Theory (particularly AQR and Bridgewater)"))
             ))            
         )
     )
